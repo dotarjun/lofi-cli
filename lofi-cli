@@ -41,9 +41,9 @@ while $keep_running; do
   echo "2. Play whiteNoise"
   echo "3. Play classical"
   echo "4. Play ratatouille"
-  echo "5. Manage custom videos"
-  echo "6. Stop current playback"
-  echo "7. Quit"
+  echo "c. Manage custom videos"
+  echo "s. Stop current playback (you can use "lofi-cli -s" to skip this menu)"
+  echo "q. Quit"
 
   read -p "Enter your choice: " choice
 
@@ -64,7 +64,7 @@ while $keep_running; do
       play_audio "https://www.youtube.com/watch?v=3ozXFWpFYzg"
       ;;
 
-    5)
+    c)
       while true; do
         echo "Manage custom videos:"
         echo "1. Play custom video"
@@ -104,11 +104,11 @@ while $keep_running; do
       done
       ;;
 
-    6)
+    s)
       stop_playback
       ;;
 
-    7)
+    q)
       keep_running=false
       exit_script
       ;;
