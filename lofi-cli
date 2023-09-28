@@ -1,0 +1,122 @@
+#!/bin/bash
+
+# Define associative arrays to store custom URLs and their names
+declare -A custom_urls
+
+# Flag to track if playback has been stopped
+stopped=false
+
+# Flag to track whether to display the options menu
+show_options=true
+
+# Function to stop playback
+stop_playback() {
+  pkill -f "mpv"
+  echo "Playback stopped."
+  stopped=true
+}
+
+if [[ "$1" == "-s" ]]; then
+  # If the script is run with "-s" option, stop the playback and exit
+  stop_playback
+  show_options=false
+fi
+
+while $show_options; do
+  echo "Choose an option:"
+  echo "1. Play lofi"
+  echo "2. Play whiteNoise"
+  echo "3. Play classical"
+  echo "4. Play ratatouille"
+  echo "5. Manage custom videos"
+  echo "6. Stop current playback"
+  echo "7. Quit"
+  read -p "Enter your choice: " choice
+
+  case "$choice" in
+    1)
+      if ! $stopped; then
+        stop_playback
+      fi
+      mpv "https://www.youtube.com/watch?v=jfKfPfyJRdk" --no-video --really-quiet & disown
+      ;;
+    2)
+      if ! $stopped; then
+        stop_playback
+      fi
+      mpv "https://www.youtube.com/watch?v=vLEek3I3wac" --no-video --really-quiet & disown
+      ;;
+    3)
+      if ! $stopped; then
+        stop_playback
+      fi
+      mpv "https://www.youtube.com/watch?v=38LMlhYiQzc" --no-video --really-quiet & disown
+      ;;
+    4)
+      if ! $stopped; then
+        stop_playback
+      fi
+      mpv "https://www.youtube.com/watch?v=3ozXFWpFYzg" --no-video --really-quiet & disown
+      ;;
+    5)
+      while true; do
+        echo "Manage custom videos:"
+        echo "1. Play custom video"
+        echo "2. List saved custom videos"
+        echo "3. Play saved custom video"
+        echo "4. Back to main menu"
+        read -p "Enter your choice: " custom_choice
+
+        case "$custom_choice" in
+          1)
+            if ! $stopped; then
+              stop_playback
+            fi
+            read -p "Enter the YouTube URL to play: " custom_url
+            read -p "Enter a custom name for this URL: " custom_name
+            mpv "$custom_url" --no-video --really-quiet & disown
+            custom_urls["$custom_name"]=$custom_url
+            ;;
+          2)
+            echo "Saved custom videos:"
+            for name in "${!custom_urls[@]}"; do
+              echo "$name: ${custom_urls[$name]}"
+            done
+            ;;
+          3)
+            echo "Saved custom videos:"
+            for name in "${!custom_urls[@]}"; do
+              echo "$name: ${custom_urls[$name]}"
+            done
+            read -p "Enter the custom name to play: " custom_name
+            custom_url="${custom_urls[$custom_name]}"
+            if [ -n "$custom_url" ]; then
+              if ! $stopped; then
+                stop_playback
+              fi
+              mpv "$custom_url" --no-video --really-quiet & disown
+            else
+              echo "Custom name not found."
+            fi
+            ;;
+          4)
+            break
+            ;;
+          *)
+            echo "Invalid option. Please choose a valid option."
+            ;;
+        esac
+      done
+      ;;
+    6)
+      stop_playback
+      ;;
+    7)
+      echo "Goodbye!"
+      exit 0
+      ;;
+    *)
+      echo "Invalid option. Please choose a valid option."
+      ;;
+  esac
+done
