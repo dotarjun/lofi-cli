@@ -28,11 +28,19 @@ exit_script() {
   exit 0
 }
 
-if [[ "$1" == "-s" ]]; then
+if [[ "$1" == "-S" ]]; then
   stop_playback
   show_options=false
   exit_script
 fi
+
+if [[ "$1" == "-P" ]]; then
+  play_audio "https://www.youtube.com/watch?v=jfKfPfyJRdk"
+  show_options=false
+  exit_script
+fi
+
+
 
 while $keep_running; do
 
